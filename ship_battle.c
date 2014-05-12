@@ -24,23 +24,28 @@ typedef struct {
 /* init functions */
 static int screen_init(void);
 static void screen_end(void);
-static void grid_init(void);
-static void print_grid(void);
+static void grid_init(char a[][N]);
+static void print_grid(char a[][N]);
 static void bold_print(int i, int k, char c);
 /* difficulty change functions */
 static void change_refresh_time(void);
-static void change_height(void);
-static void lower_enemy_ships(void);
-static void change_num_ships(void);
+static void change_height(char a[][N], enemy_ship s[M], my_ship *mine,
+			  enemy_ship old[M]);
+static void lower_enemy_ships(char a[][N], enemy_ship s[M], my_ship *mine,
+			      enemy_ship old[M]);
+static void change_num_ships(char a[][N], enemy_ship s[M]);
 /* game functions */
-static void ships_generate(void);
-static void enemy_shoots(void);
-static void my_shoot(void); /* store col from which we shot */
-static void update_my_shoot(void);
-static void manage_hit(void);
-static void delete_hit_ship(void);
-static void old_shoots_recover(void);
-static void my_shoots_sort(void);
+static void ships_generate(char a[][N], enemy_ship s[M]);
+static void enemy_shoots(char a[][N], enemy_ship s[M], int my_ship_col);
+static void my_shoot(my_ship *mine); /* store col from which we shot */
+static void update_my_shoot(char a[][N], enemy_ship s[M],
+			    my_ship *mine, enemy_ship old[M]);
+static void manage_hit(char a[][N], int i, int j, enemy_ship s[M],
+		       enemy_ship old[M]);
+static void delete_hit_ship(char a[][N], int j, enemy_ship s[M],
+			    enemy_ship old[M]);
+static void old_shoots_recover(char a[][N], enemy_ship old[M], int my_ship_col);
+static void my_shoots_sort(my_ship *mine);
 
 /* global variables */
 int points = 0; /* points scored */
@@ -106,6 +111,7 @@ int main(void)
 		case KEY_F(2): /* f2 to exit */
 			screen_end();
 			return 0;
+		}
 		if (points < 800) {
 			if (points >= 100) {
 				change_num_ships(a, s);
